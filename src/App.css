@@ -28,3 +28,8 @@
   white-space: pre-wrap;
   font-size: 12px;
 }
+
+.debug-score {
+  margin-top: 16px;
+  font-weight: bold;
+}
