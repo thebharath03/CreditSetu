@@ -1,0 +1,15 @@
+{
+  "featureOrder": [
+    "avgBillAmount",
+    "rentRegularity",
+    "utilityRegularity",
+    "monthsHistory"
+  ],
+  "coefficients": [
+    -6.313543146074842e-05,
+    3.9848429925470175,
+    3.259672573023509,
+    0.06764245226013725
+  ],
+  "intercept": -4.552236456800698
+}
