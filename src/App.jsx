@@ -2,22 +2,26 @@ import { useState } from 'react'
 import UploadCapture from './components/UploadCapture'
 import ProcessingState from './components/ProcessingState'
 import { extractText } from './lib/ocr'
+import { parseFeatures } from './lib/parseFeatures'
 import './App.css'
 
 function App() {
   const [file, setFile] = useState(null)
   const [processing, setProcessing] = useState(false)
   const [ocrText, setOcrText] = useState('')
+  const [features, setFeatures] = useState(null)
 
   async function handleFileSelect(selected) {
     setFile(selected)
     setOcrText('')
+    setFeatures(null)
     if (!selected) return
 
     setProcessing(true)
     try {
       const text = await extractText(selected)
       setOcrText(text)
+      setFeatures(parseFeatures(text))
     } finally {
       setProcessing(false)
     }
