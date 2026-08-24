@@ -37,7 +37,7 @@ function QueueEmptyState() {
   )
 }
 
-function ApplicantQueue() {
+function ApplicantQueue({ onSelectApplicant }) {
   const [applicants, setApplicants] = useState(null)
 
   useEffect(() => {
@@ -65,7 +65,15 @@ function ApplicantQueue() {
       </thead>
       <tbody>
         {applicants.map((applicant) => (
-          <tr key={applicant.id}>
+          <tr
+            key={applicant.id}
+            className="applicant-queue-row"
+            tabIndex={0}
+            onClick={() => onSelectApplicant(applicant.id)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') onSelectApplicant(applicant.id)
+            }}
+          >
             <td>{applicant.name}</td>
             <td className="tabular-nums">{applicant.score.value}</td>
             <td>
