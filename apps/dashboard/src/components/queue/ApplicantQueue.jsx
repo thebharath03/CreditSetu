@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { listApplicants } from '../../lib/dataSource'
+import { useMockArrivalTrigger } from '../../lib/arrivalTrigger'
 
 const BAND_LABEL = {
   low: 'Low risk',
@@ -39,6 +40,8 @@ function QueueEmptyState() {
 
 function ApplicantQueue({ onSelectApplicant }) {
   const [applicants, setApplicants] = useState(null)
+  const [highlightedId, setHighlightedId] = useState(null)
+  const applicantsRef = useRef(null)
 
   useEffect(() => {
     let cancelled = false
@@ -49,6 +52,20 @@ function ApplicantQueue({ onSelectApplicant }) {
       cancelled = true
     }
   }, [])
+
+  useEffect(() => {
+    applicantsRef.current = applicants
+  }, [applicants])
+
+  useMockArrivalTrigger(() => {
+    const current = applicantsRef.current
+    if (!current || current.length === 0) return
+    const idx = Math.floor(Math.random() * current.length)
+    const updated = { ...current[idx], lastUpdatedAt: new Date().toISOString() }
+    setApplicants([updated, ...current.filter((_, i) => i !== idx)])
+    setHighlightedId(updated.id)
+    setTimeout(() => setHighlightedId(null), 2000)
+  }, 15000)
 
   if (applicants === null) return <QueueLoadingState />
   if (applicants.length === 0) return <QueueEmptyState />
@@ -67,7 +84,7 @@ function ApplicantQueue({ onSelectApplicant }) {
         {applicants.map((applicant) => (
           <tr
             key={applicant.id}
-            className="applicant-queue-row"
+            className={`applicant-queue-row${applicant.id === highlightedId ? ' arrival-highlight' : ''}`}
             tabIndex={0}
             onClick={() => onSelectApplicant(applicant.id)}
             onKeyDown={(e) => {
