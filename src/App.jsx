@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import UploadCapture from './components/UploadCapture'
 import ProcessingState from './components/ProcessingState'
 import ResultScreen from './components/ResultScreen'
+import WhatsNextSection from './components/WhatsNextSection'
 import { extractText } from './lib/ocr'
 import { parseFeatures } from './lib/parseFeatures'
 import { scoreApplicant, toDisplayScore } from './lib/scoring'
@@ -49,7 +50,7 @@ function App() {
 
       <ResultScreen score={score} explanation={explanation} />
 
-      {/* Phase 8: WhatsNextSection renders here */}
+      <WhatsNextSection />
     </div>
   )
 }
