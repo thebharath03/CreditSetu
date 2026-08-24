@@ -4,6 +4,7 @@ import ProcessingState from './components/ProcessingState'
 import { extractText } from './lib/ocr'
 import { parseFeatures } from './lib/parseFeatures'
 import { scoreApplicant, toDisplayScore } from './lib/scoring'
+import { explain } from './lib/explain'
 import './App.css'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
   const [features, setFeatures] = useState(null)
   const [weights, setWeights] = useState(null)
   const [score, setScore] = useState(null)
+  const [explanation, setExplanation] = useState([])
 
   useEffect(() => {
     fetch('/weights.json')
@@ -25,6 +27,7 @@ function App() {
     setOcrText('')
     setFeatures(null)
     setScore(null)
+    setExplanation([])
     if (!selected) return
 
     setProcessing(true)
@@ -36,6 +39,7 @@ function App() {
       if (weights) {
         const probability = scoreApplicant(parsed, weights)
         setScore(toDisplayScore(probability))
+        setExplanation(explain(parsed, weights))
       }
     } finally {
       setProcessing(false)
@@ -53,6 +57,13 @@ function App() {
         <pre className="debug-ocr-text">{ocrText}</pre>
       )}
       {score !== null && <p className="debug-score">Score: {score}/100</p>}
+      {explanation.length > 0 && (
+        <ul className="debug-explanation">
+          {explanation.map((phrase) => (
+            <li key={phrase}>{phrase}</li>
+          ))}
+        </ul>
+      )}
 
       {/* Phase 7: ResultScreen renders here with score + explanation */}
 
