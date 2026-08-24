@@ -14,3 +14,17 @@
   margin-top: 16px;
   border-radius: 8px;
 }
+
+.processing-state {
+  margin-top: 16px;
+  font-style: italic;
+}
+
+.debug-ocr-text {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f4f4f4;
+  color: #111;
+  white-space: pre-wrap;
+  font-size: 12px;
+}
