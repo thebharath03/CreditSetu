@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import UploadCapture from './components/UploadCapture'
 import ProcessingState from './components/ProcessingState'
+import ResultScreen from './components/ResultScreen'
 import { extractText } from './lib/ocr'
 import { parseFeatures } from './lib/parseFeatures'
 import { scoreApplicant, toDisplayScore } from './lib/scoring'
@@ -10,8 +11,6 @@ import './App.css'
 function App() {
   const [file, setFile] = useState(null)
   const [processing, setProcessing] = useState(false)
-  const [ocrText, setOcrText] = useState('')
-  const [features, setFeatures] = useState(null)
   const [weights, setWeights] = useState(null)
   const [score, setScore] = useState(null)
   const [explanation, setExplanation] = useState([])
@@ -24,8 +23,6 @@ function App() {
 
   async function handleFileSelect(selected) {
     setFile(selected)
-    setOcrText('')
-    setFeatures(null)
     setScore(null)
     setExplanation([])
     if (!selected) return
@@ -33,9 +30,7 @@ function App() {
     setProcessing(true)
     try {
       const text = await extractText(selected)
-      setOcrText(text)
       const parsed = parseFeatures(text)
-      setFeatures(parsed)
       if (weights) {
         const probability = scoreApplicant(parsed, weights)
         setScore(toDisplayScore(probability))
@@ -52,20 +47,7 @@ function App() {
 
       {processing && <ProcessingState />}
 
-      {/* DEBUG: remove before Phase 7 polish */}
-      {ocrText && (
-        <pre className="debug-ocr-text">{ocrText}</pre>
-      )}
-      {score !== null && <p className="debug-score">Score: {score}/100</p>}
-      {explanation.length > 0 && (
-        <ul className="debug-explanation">
-          {explanation.map((phrase) => (
-            <li key={phrase}>{phrase}</li>
-          ))}
-        </ul>
-      )}
-
-      {/* Phase 7: ResultScreen renders here with score + explanation */}
+      <ResultScreen score={score} explanation={explanation} />
 
       {/* Phase 8: WhatsNextSection renders here */}
     </div>

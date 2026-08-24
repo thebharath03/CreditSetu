@@ -20,22 +20,21 @@
   font-style: italic;
 }
 
-.debug-ocr-text {
-  margin-top: 16px;
-  padding: 12px;
-  background: #f4f4f4;
-  color: #111;
-  white-space: pre-wrap;
-  font-size: 12px;
+.result-screen {
+  margin-top: 24px;
+  padding: 20px;
+  border-radius: 8px;
+  background: var(--accent-bg, #f4f4f4);
 }
 
-.debug-score {
-  margin-top: 16px;
+.result-score {
+  margin: 0;
+  font-size: 40px;
   font-weight: bold;
 }
 
-.debug-explanation {
-  margin-top: 8px;
+.result-explanation {
+  margin: 12px 0 0;
   padding-left: 20px;
   font-size: 14px;
 }
