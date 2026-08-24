@@ -1,6 +1,20 @@
+import Sidebar from './components/layout/Sidebar'
+import Header from './components/layout/Header'
+import ApplicantQueue from './components/queue/ApplicantQueue'
+import './App.css'
+
 function App() {
-  // Phase 1 builds the real dashboard shell (Sidebar, Header, ApplicantQueue) here.
-  return <div className="app-placeholder">CreditSetu Dashboard — Phase 1 builds the UI here.</div>
+  return (
+    <div className="dashboard-shell">
+      <Sidebar />
+      <div className="dashboard-main">
+        <Header title="Applicant Queue" subtitle="Scored applicants, most recent first" />
+        <main className="dashboard-content">
+          <ApplicantQueue />
+        </main>
+      </div>
+    </div>
+  )
 }
 
 export default App
