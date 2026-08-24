@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Base surface — deep navy/charcoal for chrome, off-white for content, not pure black/white */
+  --color-bg: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-navy-900: #0b1425;
+  --color-navy-700: #1b2740;
+  --color-navy-500: #33415e;
+
+  --color-text-primary: #10131a;
+  --color-text-secondary: #5b6472;
+  --color-text-inverse: #f2f4f8;
+  --color-border: #e2e5ea;
+
+  /* Single confident accent — reserved for the score and primary actions only */
+  --color-accent: #4f46e5;
+  --color-accent-soft: #eef0ff;
+  --color-accent-contrast: #ffffff;
+
+  /* Restrained 3-color risk-band system — muted, not traffic-light red/yellow/green */
+  --color-risk-low: #2f6f5e;
+  --color-risk-low-bg: #e6f2ee;
+  --color-risk-medium: #b8873a;
+  --color-risk-medium-bg: #fbf1e1;
+  --color-risk-high: #b23a48;
+  --color-risk-high-bg: #fbe9eb;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', 'General Sans', system-ui, sans-serif;
+  --font-body: 'Inter', 'IBM Plex Sans', system-ui, sans-serif;
+  --font-numeric: 'Inter', system-ui, sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.5rem;
+  --text-score: 3.5rem;
+
+  /* Spacing scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+
+  /* Shadows / blur (used sparingly — glass card surfaces, score panel) */
+  --shadow-sm: 0 1px 2px rgba(11, 20, 37, 0.06);
+  --shadow-md: 0 4px 16px rgba(11, 20, 37, 0.08);
+  --shadow-lg: 0 12px 32px rgba(11, 20, 37, 0.12);
+  --blur-glass: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  margin: 0;
+}
+
+.tabular-nums {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+}
