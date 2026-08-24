@@ -16,23 +16,33 @@ function easeOutCubic(t) {
 function ScoreGauge({ score }) {
   const [animatedValue, setAnimatedValue] = useState(0)
   const frameRef = useRef(null)
+  const fromRef = useRef(0)
 
   useEffect(() => {
     const start = performance.now()
-    const duration = 900
+    const duration = 500
+    const from = fromRef.current
     const target = score.value
+    let current = from
 
     function tick(now) {
       const elapsed = now - start
       const progress = Math.min(elapsed / duration, 1)
-      setAnimatedValue(target * easeOutCubic(progress))
+      const eased = easeOutCubic(progress)
+      current = from + (target - from) * eased
+      setAnimatedValue(current)
       if (progress < 1) {
         frameRef.current = requestAnimationFrame(tick)
+      } else {
+        fromRef.current = target
       }
     }
 
     frameRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frameRef.current)
+    return () => {
+      cancelAnimationFrame(frameRef.current)
+      fromRef.current = current
+    }
   }, [score.value])
 
   const offset = CIRCUMFERENCE * (1 - animatedValue / 100)

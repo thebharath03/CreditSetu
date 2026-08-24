@@ -299,6 +299,46 @@
   color: var(--color-text-secondary);
 }
 
+.what-if-simulator {
+  grid-column: 1 / -1;
+}
+
+.what-if-body {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.what-if-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.what-if-control-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-1);
+}
+
+.what-if-control input[type='range'] {
+  width: 100%;
+  accent-color: var(--color-accent);
+}
+
+.what-if-gauge {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 960px) {
+  .what-if-body {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 960px) {
   .applicant-detail-grid {
     grid-template-columns: 1fr;

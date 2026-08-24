@@ -16,10 +16,11 @@ const APPLICANTS = [
   {
     id: 'app-01',
     name: 'R. Sharma',
-    score: { value: 82, band: 'low', computedAt: '2026-08-25T09:14:00Z' },
+    features: { avgBillAmount: 2200, rentRegularity: 0.85, utilityRegularity: 0.75, monthsHistory: 16 },
+    score: { value: 90, band: 'low', computedAt: '2026-08-25T09:14:00Z' },
     explanationFactors: [
-      factor('rentRegularity', 'Regular rent payments', 'positive', 0.9),
-      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.75),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.72),
     ],
     documents: [
       doc('doc-01a', 'electricity_bill', 'Electricity bill — July 2026', '2026-08-01T10:00:00Z'),
@@ -32,10 +33,11 @@ const APPLICANTS = [
   {
     id: 'app-02',
     name: 'A. Iyer',
-    score: { value: 64, band: 'medium', computedAt: '2026-08-24T15:40:00Z' },
+    features: { avgBillAmount: 3200, rentRegularity: 0.68, utilityRegularity: 0.58, monthsHistory: 9 },
+    score: { value: 61, band: 'medium', computedAt: '2026-08-24T15:40:00Z' },
     explanationFactors: [
-      factor('monthsHistory', 'Length of payment history', 'positive', 0.5),
-      factor('avgBillAmount', 'Average bill amount', 'negative', 0.3),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.7),
     ],
     documents: [
       doc('doc-02a', 'electricity_bill', 'Electricity bill — June 2026', '2026-08-20T08:12:00Z'),
@@ -47,11 +49,11 @@ const APPLICANTS = [
   {
     id: 'app-03',
     name: 'N. Verma',
-    score: { value: 91, band: 'low', computedAt: '2026-08-25T11:02:00Z' },
+    features: { avgBillAmount: 1900, rentRegularity: 0.93, utilityRegularity: 0.87, monthsHistory: 28 },
+    score: { value: 98, band: 'low', computedAt: '2026-08-25T11:02:00Z' },
     explanationFactors: [
-      factor('rentRegularity', 'Regular rent payments', 'positive', 0.95),
-      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.8),
-      factor('monthsHistory', 'Length of payment history', 'positive', 0.6),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.77),
     ],
     documents: [
       doc('doc-03a', 'rent_receipt', 'Rent receipt — July 2026', '2026-08-22T09:30:00Z'),
@@ -65,10 +67,11 @@ const APPLICANTS = [
   {
     id: 'app-04',
     name: 'K. Reddy',
-    score: { value: 38, band: 'high', computedAt: '2026-08-23T18:05:00Z' },
+    features: { avgBillAmount: 2800, rentRegularity: 0.4, utilityRegularity: 0.42, monthsHistory: 4 },
+    score: { value: 18, band: 'high', computedAt: '2026-08-23T18:05:00Z' },
     explanationFactors: [
-      factor('monthsHistory', 'Length of payment history', 'negative', 0.7),
-      factor('rentRegularity', 'Regular rent payments', 'negative', 0.6),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.86),
     ],
     documents: [
       doc('doc-04a', 'electricity_bill', 'Electricity bill — May 2026', '2026-08-18T14:20:00Z'),
@@ -79,10 +82,11 @@ const APPLICANTS = [
   {
     id: 'app-05',
     name: 'S. Bano',
-    score: { value: 55, band: 'medium', computedAt: '2026-08-24T10:22:00Z' },
+    features: { avgBillAmount: 3800, rentRegularity: 0.52, utilityRegularity: 0.6, monthsHistory: 7 },
+    score: { value: 43, band: 'medium', computedAt: '2026-08-24T10:22:00Z' },
     explanationFactors: [
-      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.4),
-      factor('avgBillAmount', 'Average bill amount', 'negative', 0.35),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.94),
     ],
     documents: [
       doc('doc-05a', 'rent_receipt', 'Rent receipt — June 2026', '2026-08-19T11:00:00Z'),
@@ -94,10 +98,11 @@ const APPLICANTS = [
   {
     id: 'app-06',
     name: 'P. Nair',
-    score: { value: 77, band: 'low', computedAt: '2026-08-25T07:48:00Z' },
+    features: { avgBillAmount: 2100, rentRegularity: 0.8, utilityRegularity: 0.68, monthsHistory: 13 },
+    score: { value: 83, band: 'low', computedAt: '2026-08-25T07:48:00Z' },
     explanationFactors: [
-      factor('rentRegularity', 'Regular rent payments', 'positive', 0.85),
-      factor('monthsHistory', 'Length of payment history', 'positive', 0.5),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.7),
     ],
     documents: [
       doc('doc-06a', 'electricity_bill', 'Electricity bill — July 2026', '2026-08-21T16:40:00Z'),
@@ -110,10 +115,11 @@ const APPLICANTS = [
   {
     id: 'app-07',
     name: 'M. Khan',
-    score: { value: 22, band: 'high', computedAt: '2026-08-22T13:10:00Z' },
+    features: { avgBillAmount: 11000, rentRegularity: 0.15, utilityRegularity: 0.18, monthsHistory: 2 },
+    score: { value: 2, band: 'high', computedAt: '2026-08-22T13:10:00Z' },
     explanationFactors: [
-      factor('monthsHistory', 'Length of payment history', 'negative', 0.8),
-      factor('utilityRegularity', 'Consistent utility bill payments', 'negative', 0.55),
+      factor('avgBillAmount', 'Average bill amount', 'negative', 1),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 0.86),
     ],
     documents: [
       doc('doc-07a', 'informal_ledger', 'Shop ledger extract', '2026-08-15T09:00:00Z'),
@@ -124,10 +130,11 @@ const APPLICANTS = [
   {
     id: 'app-08',
     name: 'D. Joshi',
-    score: { value: 69, band: 'medium', computedAt: '2026-08-24T19:33:00Z' },
+    features: { avgBillAmount: 4800, rentRegularity: 0.7, utilityRegularity: 0.5, monthsHistory: 11 },
+    score: { value: 58, band: 'medium', computedAt: '2026-08-24T19:33:00Z' },
     explanationFactors: [
-      factor('rentRegularity', 'Regular rent payments', 'positive', 0.6),
-      factor('avgBillAmount', 'Average bill amount', 'negative', 0.25),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.58),
     ],
     documents: [
       doc('doc-08a', 'electricity_bill', 'Electricity bill — June 2026', '2026-08-17T12:00:00Z'),
@@ -140,11 +147,11 @@ const APPLICANTS = [
   {
     id: 'app-09',
     name: 'T. Pillai',
-    score: { value: 88, band: 'low', computedAt: '2026-08-25T06:20:00Z' },
+    features: { avgBillAmount: 2500, rentRegularity: 0.9, utilityRegularity: 0.82, monthsHistory: 24 },
+    score: { value: 96, band: 'low', computedAt: '2026-08-25T06:20:00Z' },
     explanationFactors: [
-      factor('rentRegularity', 'Regular rent payments', 'positive', 0.9),
-      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.7),
-      factor('monthsHistory', 'Length of payment history', 'positive', 0.65),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.75),
     ],
     documents: [
       doc('doc-09a', 'rent_receipt', 'Rent receipt — July 2026', '2026-08-23T08:00:00Z'),
@@ -158,10 +165,11 @@ const APPLICANTS = [
   {
     id: 'app-10',
     name: 'V. Das',
-    score: { value: 45, band: 'medium', computedAt: '2026-08-23T21:15:00Z' },
+    features: { avgBillAmount: 3000, rentRegularity: 0.48, utilityRegularity: 0.55, monthsHistory: 6 },
+    score: { value: 35, band: 'high', computedAt: '2026-08-23T21:15:00Z' },
     explanationFactors: [
-      factor('monthsHistory', 'Length of payment history', 'negative', 0.4),
-      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.3),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.94),
     ],
     documents: [
       doc('doc-10a', 'electricity_bill', 'Electricity bill — May 2026', '2026-08-16T10:30:00Z'),
@@ -173,10 +181,11 @@ const APPLICANTS = [
   {
     id: 'app-11',
     name: 'L. Menon',
-    score: { value: 30, band: 'high', computedAt: '2026-08-22T08:50:00Z' },
+    features: { avgBillAmount: 10500, rentRegularity: 0.18, utilityRegularity: 0.2, monthsHistory: 3 },
+    score: { value: 3, band: 'high', computedAt: '2026-08-22T08:50:00Z' },
     explanationFactors: [
-      factor('rentRegularity', 'Regular rent payments', 'negative', 0.65),
-      factor('avgBillAmount', 'Average bill amount', 'negative', 0.4),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('avgBillAmount', 'Average bill amount', 'negative', 0.92),
     ],
     documents: [
       doc('doc-11a', 'informal_ledger', 'Shop ledger extract', '2026-08-14T13:45:00Z'),
@@ -188,10 +197,11 @@ const APPLICANTS = [
   {
     id: 'app-12',
     name: 'G. Chatterjee',
-    score: { value: 73, band: 'low', computedAt: '2026-08-25T08:05:00Z' },
+    features: { avgBillAmount: 2300, rentRegularity: 0.76, utilityRegularity: 0.72, monthsHistory: 15 },
+    score: { value: 84, band: 'low', computedAt: '2026-08-25T08:05:00Z' },
     explanationFactors: [
-      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.7),
-      factor('monthsHistory', 'Length of payment history', 'positive', 0.45),
+      factor('rentRegularity', 'Regular rent payments', 'positive', 1),
+      factor('utilityRegularity', 'Consistent utility bill payments', 'positive', 0.77),
     ],
     documents: [
       doc('doc-12a', 'electricity_bill', 'Electricity bill — July 2026', '2026-08-24T17:10:00Z'),

@@ -3,6 +3,7 @@ import { getApplicant } from '../../lib/dataSource'
 import ScoreGauge from './ScoreGauge'
 import ExplanationFactors from './ExplanationFactors'
 import DocumentHistory from './DocumentHistory'
+import WhatIfSimulator from '../simulator/WhatIfSimulator'
 
 function ApplicantDetail({ applicantId, onBack }) {
   const [applicant, setApplicant] = useState(null)
@@ -42,6 +43,8 @@ function ApplicantDetail({ applicantId, onBack }) {
           <h2 className="detail-card-title">Document history</h2>
           <DocumentHistory documents={applicant.documents} />
         </section>
+
+        <WhatIfSimulator baselineFeatures={applicant.features} />
       </div>
     </div>
   )

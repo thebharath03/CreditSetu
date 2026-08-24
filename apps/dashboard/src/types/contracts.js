@@ -41,9 +41,19 @@
  */
 
 /**
+ * @typedef {Object} ApplicantFeatures
+ * @property {number} avgBillAmount
+ * @property {number} rentRegularity - 0-1
+ * @property {number} utilityRegularity - 0-1
+ * @property {number} monthsHistory
+ */
+
+/**
  * @typedef {Object} Applicant
  * @property {string} id
  * @property {string} name
+ * @property {ApplicantFeatures} features - raw model inputs; score/explanationFactors are
+ *   derived from these via the same sigmoid/scoreApplicant function the what-if simulator uses
  * @property {Score} score
  * @property {ExplanationFactor[]} explanationFactors
  * @property {Document[]} documents
