@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { listApplicants } from '../../lib/dataSource'
-import { useMockArrivalTrigger } from '../../lib/arrivalTrigger'
+import { getApplicant, listApplicants } from '../../lib/dataSource'
+import { useArrivalTrigger } from '../../lib/arrivalTrigger'
 
 const BAND_LABEL = {
   low: 'Low risk',
@@ -57,14 +57,28 @@ function ApplicantQueue({ onSelectApplicant }) {
     applicantsRef.current = applicants
   }, [applicants])
 
-  useMockArrivalTrigger(() => {
-    const current = applicantsRef.current
-    if (!current || current.length === 0) return
-    const idx = Math.floor(Math.random() * current.length)
-    const updated = { ...current[idx], lastUpdatedAt: new Date().toISOString() }
-    setApplicants([updated, ...current.filter((_, i) => i !== idx)])
+  function showArrival(updated, current) {
+    setApplicants([updated, ...current.filter((a) => a.id !== updated.id)])
     setHighlightedId(updated.id)
     setTimeout(() => setHighlightedId(null), 2000)
+  }
+
+  useArrivalTrigger((applicantId) => {
+    const current = applicantsRef.current
+    if (!current) return
+
+    if (applicantId) {
+      // Live mode: a new score row landed for this applicant — fetch the fresh row.
+      getApplicant(applicantId).then((updated) => {
+        if (updated) showArrival(updated, applicantsRef.current ?? current)
+      })
+      return
+    }
+
+    // Mock mode: synthesize an update on a random existing applicant.
+    if (current.length === 0) return
+    const idx = Math.floor(Math.random() * current.length)
+    showArrival({ ...current[idx], lastUpdatedAt: new Date().toISOString() }, current)
   }, 15000)
 
   if (applicants === null) return <QueueLoadingState />
