@@ -1,30 +1,38 @@
 """
 Trains a logistic regression on the synthetic dataset produced by
-generate_dataset.py, and exports the coefficients CreditSetu's web demo
-needs to score applicants client-side.
+generate_dataset.py, and saves the fitted model for explain_shap.py and
+export_weights.py to consume.
+
+Model choice: logistic regression, not a gradient-boosted ensemble.
+Two reasons, both concrete rather than a default:
+1. TFLite conversion — a single dense layer (weights + sigmoid) converts
+   trivially, with none of a tree ensemble's op-support and size concerns
+   on-device.
+2. It's already the shape apps/dashboard's client-side scoring assumes
+   (sigmoid of a dot product, see apps/dashboard/src/lib/scoring.js) and
+   what the what-if simulator recomputes against live in the browser —
+   switching model families would mean redesigning that contract too, for
+   no accuracy benefit at this dataset's size and feature count.
+Linearity also makes the SHAP step in explain_shap.py exact rather than
+approximated (shap.LinearExplainer), which is a better fit for a small,
+low-dimensional feature set like this one than a tree-based explainer.
 
 This is a one-time offline step, not part of the shipped app. Run:
     python model/generate_dataset.py
     python model/train_model.py
+    python model/export_weights.py
 """
 
 import csv
-import json
+import os
 
+import joblib
 from sklearn.linear_model import LogisticRegression
 
-DATASET_PATH = "model/dataset.csv"
-WEIGHTS_OUTPUT_PATH = "public/weights.json"
+from features import FEATURE_ORDER
 
-# Order matters: this becomes featureOrder in weights.json, and every
-# downstream phase (parseFeatures, scoreApplicant) depends on this exact
-# spelling and order.
-FEATURE_ORDER = [
-    "avgBillAmount",
-    "rentRegularity",
-    "utilityRegularity",
-    "monthsHistory",
-]
+DATASET_PATH = "model/dataset.csv"
+MODEL_OUTPUT_PATH = "model/export/model.joblib"
 
 
 def load_dataset(path):
@@ -40,22 +48,19 @@ def load_dataset(path):
 def main():
     X, y = load_dataset(DATASET_PATH)
 
-    model = LogisticRegression()
+    # Default max_iter=100 doesn't converge here: avgBillAmount's scale
+    # (up to 12000) dwarfs the 0-1 regularity features. Not rescaling
+    # features, since scoring.js's client-side dot product expects raw
+    # feature values, not standardized ones — just letting lbfgs run longer.
+    model = LogisticRegression(max_iter=1000)
     model.fit(X, y)
 
-    weights = {
-        "featureOrder": FEATURE_ORDER,
-        "coefficients": model.coef_[0].tolist(),
-        "intercept": float(model.intercept_[0]),
-    }
-
-    with open(WEIGHTS_OUTPUT_PATH, "w") as f:
-        json.dump(weights, f, indent=2)
+    os.makedirs(os.path.dirname(MODEL_OUTPUT_PATH), exist_ok=True)
+    joblib.dump(model, MODEL_OUTPUT_PATH)
 
     train_accuracy = model.score(X, y)
     print(f"Trained on {len(X)} rows, train accuracy: {train_accuracy:.3f}")
-    print(f"Wrote {WEIGHTS_OUTPUT_PATH}")
-    print(json.dumps(weights, indent=2))
+    print(f"Wrote {MODEL_OUTPUT_PATH}")
 
 
 if __name__ == "__main__":

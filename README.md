@@ -5,7 +5,7 @@ Alternative-data credit scoring for applicants without a formal credit history �
 ## What's here
 
 - **`apps/dashboard`** — the lender dashboard (React + Vite). Applicant queue, score detail with explainability, a what-if simulator, and a credentials tab for issuing/verifying portable QR score credentials. Reads through a single `dataSource.js` interface that switches between hardcoded mock fixtures and a live Supabase backend via `VITE_USE_MOCK`.
-- **`model`** — the scoring model (Python). Synthetic dataset generation, a logistic regression trained on it, and `weights.json` exported for the dashboard's client-side scoring (used directly by the what-if simulator).
+- **`model`** — the scoring model (Python). Synthetic dataset generation, a logistic regression trained on it, real per-applicant SHAP explainability, and `weights.json` exported for the dashboard's client-side scoring (used directly by the what-if simulator).
 
 ## Running the dashboard
 
@@ -22,8 +22,11 @@ To run live against Supabase, apply `apps/dashboard/supabase/schema.sql` then `s
 ## Regenerating the model
 
 ```
+pip install -r model/requirements.txt
 python model/generate_dataset.py
 python model/train_model.py
+python model/export_weights.py
+python model/explain_shap.py   # optional — prints sample SHAP explanations
 ```
 
-See `model/README.md` for the labeling rule and what the dataset actually represents.
+See `model/README.md` for the labeling rule, model choice rationale, and what the dataset actually represents.

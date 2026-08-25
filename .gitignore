@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 *.traineddata
+*.joblib
+__pycache__
 .env
 .env.local
 

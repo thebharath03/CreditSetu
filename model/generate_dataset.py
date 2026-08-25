@@ -28,8 +28,10 @@ where extreme_amount_penalty grows as avgBillAmount moves far from a
 import csv
 import random
 
+from features import FEATURE_ORDER
+
 RNG_SEED = 42
-N_ROWS = 400
+N_ROWS = 3000
 OUTPUT_PATH = "model/dataset.csv"
 
 TYPICAL_BILL_MIN = 800
@@ -82,16 +84,7 @@ def main():
     rows = [generate_row(rng) for _ in range(N_ROWS)]
 
     with open(OUTPUT_PATH, "w", newline="") as f:
-        writer = csv.DictWriter(
-            f,
-            fieldnames=[
-                "avgBillAmount",
-                "rentRegularity",
-                "utilityRegularity",
-                "monthsHistory",
-                "label",
-            ],
-        )
+        writer = csv.DictWriter(f, fieldnames=[*FEATURE_ORDER, "label"])
         writer.writeheader()
         writer.writerows(rows)
 
