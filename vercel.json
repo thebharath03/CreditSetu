@@ -1,5 +1,5 @@
 {
   "installCommand": "npm install",
-  "buildCommand": "cd apps/dashboard && npm run build",
-  "outputDirectory": "apps/dashboard/dist"
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
 }
