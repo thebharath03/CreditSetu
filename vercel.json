@@ -1,5 +1,5 @@
 {
   "installCommand": "npm install",
-  "buildCommand": "if [ -f apps/dashboard/package.json ]; then npm run build --workspace=apps/dashboard && cp -r apps/dashboard/dist ./dist; else npm run build; fi",
-  "outputDirectory": "dist"
+  "buildCommand": "npm run build -w dashboard && DIST=$(find . -maxdepth 3 -type d -name dist 2>/dev/null | grep -v node_modules | head -1) && rm -rf ./deploy_dist && cp -r \"$DIST\" ./deploy_dist",
+  "outputDirectory": "deploy_dist"
 }
