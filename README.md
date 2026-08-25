@@ -1,5 +1,7 @@
 # CreditSetu
 
+**🔗 Live demo: [credit-setu-alpha.vercel.app](https://credit-setu-alpha.vercel.app)**
+
 Alternative-data credit scoring for applicants without a formal credit history — utility bills, rent receipts, and similar documents are turned into a transparent, explainable score. This repo is the pre-hackathon build: everything except the mobile app.
 
 ## What's here
