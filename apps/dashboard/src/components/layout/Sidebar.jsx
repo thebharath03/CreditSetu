@@ -1,3 +1,6 @@
+import { useMock } from '../../lib/dataSource'
+import { getSupabase } from '../../lib/supabaseClient'
+
 const NAV_VIEWS = [
   { key: 'queue', label: 'Queue' },
   { key: 'credentials', label: 'Credentials' },
@@ -26,6 +29,11 @@ function Sidebar({ activeView, onSelectView }) {
           </span>
         ))}
       </nav>
+      {!useMock && (
+        <button type="button" className="sidebar-nav-item sidebar-sign-out" onClick={() => getSupabase().auth.signOut()}>
+          Sign out
+        </button>
+      )}
     </aside>
   )
 }

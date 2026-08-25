@@ -77,30 +77,29 @@ alter table explanation_factors enable row level security;
 alter table credentials enable row level security;
 alter table audit_trail enable row level security;
 
-create policy "public read applicants" on applicants for select to anon, authenticated using (true);
-create policy "public read documents" on documents for select to anon, authenticated using (true);
-create policy "public read scores" on scores for select to anon, authenticated using (true);
-create policy "public read explanation_factors" on explanation_factors for select to anon, authenticated using (true);
-create policy "public read credentials" on credentials for select to anon, authenticated using (true);
-create policy "public read audit_trail" on audit_trail for select to anon, authenticated using (true);
+-- Phase 12: reads require a logged-in lender session. authenticated only
+-- (not anon) — the dashboard's login gate would otherwise be theater,
+-- since the anon key is public and anyone could query these tables
+-- directly with it regardless of what the UI shows.
+create policy "read applicants when authenticated" on applicants for select to authenticated using (true);
+create policy "read documents when authenticated" on documents for select to authenticated using (true);
+create policy "read scores when authenticated" on scores for select to authenticated using (true);
+create policy "read explanation_factors when authenticated" on explanation_factors for select to authenticated using (true);
+create policy "read credentials when authenticated" on credentials for select to authenticated using (true);
+create policy "read audit_trail when authenticated" on audit_trail for select to authenticated using (true);
 
 -- RLS policies only apply after this base privilege check passes. Dropping
 -- and recreating the tables above does not carry over Supabase's default
--- grants, so without this the anon key gets "permission denied" before RLS
--- is ever evaluated.
+-- grants, so without this the authenticated role gets "permission denied"
+-- before RLS is ever evaluated.
 grant select on applicants, documents, scores, explanation_factors, credentials, audit_trail
-  to anon, authenticated;
+  to authenticated;
 
--- Credential issuance is the one write path this dashboard performs
--- directly from the browser (lender issues/verifies from the Credentials
--- tab; there's no separate backend). Scope is intentionally narrow:
--- insert to create a credential row, update restricted to the `verified`
--- column only — nothing else on any table is writable by anon/authenticated.
-create policy "issue credentials" on credentials for insert to anon, authenticated with check (true);
-create policy "verify credentials" on credentials for update to anon, authenticated using (true) with check (true);
-
-grant insert on credentials to anon, authenticated;
-grant update (verified) on credentials to anon, authenticated;
+-- Credential issue/verify used to write directly from the browser with a
+-- narrowly-scoped anon grant (insert + update(verified) only). That's
+-- gone now that apps/api's POST /credentials and /credentials/verify do
+-- both, signed server-side with service_role — anon/authenticated are
+-- back to pure read-only on every table, no exceptions.
 
 -- service_role (used server-side by apps/api's supabaseAdmin.js) bypasses
 -- RLS, but still needs base table grants like any role — that's a
