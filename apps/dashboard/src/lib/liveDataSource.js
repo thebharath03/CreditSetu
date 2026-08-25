@@ -6,7 +6,8 @@
  * "current" score/explanationFactors are the latest row by computed_at.
  */
 import { getSupabase } from './supabaseClient'
-import { createCredential } from './credential'
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000'
 
 const APPLICANT_SELECT = `
   id,
@@ -80,60 +81,37 @@ export async function getApplicant(id) {
   return data ? toApplicant(data) : null
 }
 
+/**
+ * Both credential actions go through apps/api now — real JWT signing
+ * (issue) and signature validation (verify) only make sense server-side,
+ * where the signing secret actually lives. The anon key's scoped
+ * insert/update(verified) grant on credentials is no longer used by this
+ * app; see supabase/schema.sql.
+ */
 export async function issueCredential(applicantId) {
-  const supabase = getSupabase()
   const applicant = await getApplicant(applicantId)
   if (!applicant) return null
 
-  const { data: scoreRow, error: scoreError } = await supabase
-    .from('scores')
-    .select('id')
-    .eq('applicant_id', applicantId)
-    .order('computed_at', { ascending: false })
-    .limit(1)
-    .maybeSingle()
-  if (scoreError) throw scoreError
-  if (!scoreRow) return null
-
-  const credential = createCredential({
-    applicantId: applicant.id,
-    name: applicant.name,
-    score: applicant.score.value,
-    band: applicant.score.band,
+  const response = await fetch(`${API_BASE_URL}/credentials`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ applicantId }),
   })
+  const body = await response.json()
+  if (!response.ok) throw new Error(body.error ?? 'Failed to issue credential.')
 
-  const { error } = await supabase.from('credentials').insert({
-    applicant_id: applicantId,
-    score_id: scoreRow.id,
-    token: credential.token,
-    qr_payload: credential.qrPayload,
-    issued_at: credential.issuedAt,
-    verified: credential.verified,
-  })
-  if (error) throw error
-
-  return { ...applicant, credential }
+  return { ...applicant, credential: body }
 }
 
 export async function verifyCredential(applicantId, token) {
-  const supabase = getSupabase()
-  const { data, error } = await supabase
-    .from('credentials')
-    .update({ verified: true })
-    .eq('token', token)
-    .select('token, qr_payload, issued_at, verified')
-    .maybeSingle()
-  if (error) throw error
-  if (!data) return null
+  const response = await fetch(`${API_BASE_URL}/credentials/verify`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token }),
+  })
+  const body = await response.json()
+  if (!response.ok || !body.valid) throw new Error(body.error ?? 'Failed to verify credential.')
 
   const applicant = await getApplicant(applicantId)
-  return {
-    ...applicant,
-    credential: {
-      token: data.token,
-      qrPayload: data.qr_payload,
-      issuedAt: data.issued_at,
-      verified: data.verified,
-    },
-  }
+  return { ...applicant, credential: { ...applicant.credential, verified: true } }
 }

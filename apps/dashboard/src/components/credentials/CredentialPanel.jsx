@@ -51,7 +51,7 @@ function CredentialPanel({ applicant, onChange }) {
           <dl className="credential-meta">
             <div>
               <dt>Status</dt>
-              <dd>{applicant.credential.verified ? 'Verified' : 'Issued, unverified'}</dd>
+              <dd>{applicant.credential.verified ? 'Signature verified' : 'Issued, unverified'}</dd>
             </div>
             <div>
               <dt>Issued</dt>
@@ -60,7 +60,7 @@ function CredentialPanel({ applicant, onChange }) {
           </dl>
           {!applicant.credential.verified && (
             <button type="button" className="primary-button" onClick={handleVerify} disabled={busy}>
-              {busy ? 'Verifying…' : 'Mark verified'}
+              {busy ? 'Verifying…' : 'Verify signature'}
             </button>
           )}
         </div>
