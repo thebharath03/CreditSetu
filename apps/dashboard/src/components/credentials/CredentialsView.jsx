@@ -63,7 +63,7 @@ function CredentialsView() {
         </tbody>
       </table>
 
-      {selected && <CredentialPanel applicant={selected} onChange={handleChange} />}
+      {selected && <CredentialPanel key={selected.id} applicant={selected} onChange={handleChange} />}
     </div>
   )
 }

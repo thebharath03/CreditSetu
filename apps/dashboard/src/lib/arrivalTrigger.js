@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useMock } from './dataSource'
-import { supabase } from './supabaseClient'
+import { getSupabase } from './supabaseClient'
 
 /**
  * Fires `onArrival` to simulate a new/updated applicant streaming in.
@@ -18,6 +18,7 @@ export function useArrivalTrigger(onArrival, intervalMs = 15000) {
       return () => clearInterval(id)
     }
 
+    const supabase = getSupabase()
     const channel = supabase
       .channel('scores-arrivals')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'scores' }, (payload) => {

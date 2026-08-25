@@ -216,7 +216,7 @@ const APPLICANTS = [
 ]
 
 export async function listApplicants() {
-  return APPLICANTS
+  return [...APPLICANTS]
 }
 
 export async function getApplicant(id) {

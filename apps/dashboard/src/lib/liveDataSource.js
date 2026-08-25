@@ -5,7 +5,7 @@
  * a history table (one applicant can have many, oldest to newest), so the
  * "current" score/explanationFactors are the latest row by computed_at.
  */
-import { supabase } from './supabaseClient'
+import { getSupabase } from './supabaseClient'
 import { createCredential } from './credential'
 
 const APPLICANT_SELECT = `
@@ -62,6 +62,7 @@ function toApplicant(row) {
 }
 
 export async function listApplicants() {
+  const supabase = getSupabase()
   const { data, error } = await supabase
     .from('applicants')
     .select(APPLICANT_SELECT)
@@ -72,6 +73,7 @@ export async function listApplicants() {
 }
 
 export async function getApplicant(id) {
+  const supabase = getSupabase()
   const { data, error } = await supabase.from('applicants').select(APPLICANT_SELECT).eq('id', id).maybeSingle()
 
   if (error) throw error
@@ -79,6 +81,7 @@ export async function getApplicant(id) {
 }
 
 export async function issueCredential(applicantId) {
+  const supabase = getSupabase()
   const applicant = await getApplicant(applicantId)
   if (!applicant) return null
 
@@ -113,6 +116,7 @@ export async function issueCredential(applicantId) {
 }
 
 export async function verifyCredential(applicantId, token) {
+  const supabase = getSupabase()
   const { data, error } = await supabase
     .from('credentials')
     .update({ verified: true })

@@ -20,13 +20,3 @@ export function createCredential({ applicantId, name, score, band }) {
 
   return { token, qrPayload: token, issuedAt, verified: false }
 }
-
-export function decodeCredential(token) {
-  const [encoded, sum] = token.split('.')
-  if (!encoded || sum !== checksum(encoded)) return null
-  try {
-    return JSON.parse(atob(encoded))
-  } catch {
-    return null
-  }
-}
