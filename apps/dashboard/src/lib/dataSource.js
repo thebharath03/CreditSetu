@@ -6,3 +6,5 @@ const impl = useMock ? mockDataSource : liveDataSource
 
 export const listApplicants = impl.listApplicants
 export const getApplicant = impl.getApplicant
+export const issueCredential = impl.issueCredential
+export const verifyCredential = impl.verifyCredential

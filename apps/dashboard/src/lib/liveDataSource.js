@@ -6,6 +6,7 @@
  * "current" score/explanationFactors are the latest row by computed_at.
  */
 import { supabase } from './supabaseClient'
+import { createCredential } from './credential'
 
 const APPLICANT_SELECT = `
   id,
@@ -75,4 +76,60 @@ export async function getApplicant(id) {
 
   if (error) throw error
   return data ? toApplicant(data) : null
+}
+
+export async function issueCredential(applicantId) {
+  const applicant = await getApplicant(applicantId)
+  if (!applicant) return null
+
+  const { data: scoreRow, error: scoreError } = await supabase
+    .from('scores')
+    .select('id')
+    .eq('applicant_id', applicantId)
+    .order('computed_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (scoreError) throw scoreError
+  if (!scoreRow) return null
+
+  const credential = createCredential({
+    applicantId: applicant.id,
+    name: applicant.name,
+    score: applicant.score.value,
+    band: applicant.score.band,
+  })
+
+  const { error } = await supabase.from('credentials').insert({
+    applicant_id: applicantId,
+    score_id: scoreRow.id,
+    token: credential.token,
+    qr_payload: credential.qrPayload,
+    issued_at: credential.issuedAt,
+    verified: credential.verified,
+  })
+  if (error) throw error
+
+  return { ...applicant, credential }
+}
+
+export async function verifyCredential(applicantId, token) {
+  const { data, error } = await supabase
+    .from('credentials')
+    .update({ verified: true })
+    .eq('token', token)
+    .select('token, qr_payload, issued_at, verified')
+    .maybeSingle()
+  if (error) throw error
+  if (!data) return null
+
+  const applicant = await getApplicant(applicantId)
+  return {
+    ...applicant,
+    credential: {
+      token: data.token,
+      qrPayload: data.qr_payload,
+      issuedAt: data.issued_at,
+      verified: data.verified,
+    },
+  }
 }

@@ -91,6 +91,17 @@ create policy "public read audit_trail" on audit_trail for select to anon, authe
 grant select on applicants, documents, scores, explanation_factors, credentials, audit_trail
   to anon, authenticated;
 
+-- Credential issuance is the one write path this dashboard performs
+-- directly from the browser (lender issues/verifies from the Credentials
+-- tab; there's no separate backend). Scope is intentionally narrow:
+-- insert to create a credential row, update restricted to the `verified`
+-- column only — nothing else on any table is writable by anon/authenticated.
+create policy "issue credentials" on credentials for insert to anon, authenticated with check (true);
+create policy "verify credentials" on credentials for update to anon, authenticated using (true) with check (true);
+
+grant insert on credentials to anon, authenticated;
+grant update (verified) on credentials to anon, authenticated;
+
 alter publication supabase_realtime add table applicants;
 alter publication supabase_realtime add table scores;
 

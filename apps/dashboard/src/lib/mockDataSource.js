@@ -4,6 +4,8 @@
  * deliberately varied across all three risk bands rather than uniform rows.
  */
 
+import { createCredential } from './credential'
+
 function doc(id, type, label, uploadedAt) {
   return { id, type, label, uploadedAt }
 }
@@ -219,4 +221,25 @@ export async function listApplicants() {
 
 export async function getApplicant(id) {
   return APPLICANTS.find((a) => a.id === id) ?? null
+}
+
+export async function issueCredential(applicantId) {
+  const applicant = APPLICANTS.find((a) => a.id === applicantId)
+  if (!applicant) return null
+
+  applicant.credential = createCredential({
+    applicantId: applicant.id,
+    name: applicant.name,
+    score: applicant.score.value,
+    band: applicant.score.band,
+  })
+  return { ...applicant }
+}
+
+export async function verifyCredential(applicantId, _token) {
+  const applicant = APPLICANTS.find((a) => a.id === applicantId)
+  if (!applicant || !applicant.credential) return null
+
+  applicant.credential = { ...applicant.credential, verified: true }
+  return { ...applicant }
 }
