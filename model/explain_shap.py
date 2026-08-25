@@ -7,8 +7,16 @@ factors" reflects what actually drove *that* applicant's score, not a
 static global ranking.
 
 Uses shap.LinearExplainer against the logistic regression from
-train_model.py. SHAP values are computed in log-odds (logit) space, not
-probability space — this is standard practice for linear models, since
+train_model.py, with the full dataset as the background (not shap's
+default 100-sample subsample) so the base value matches
+export_weights.py's featureMeans exactly — apps/api's explainService.js
+reimplements this same computation in JS as coefficient * (x - mean),
+which is the exact closed-form SHAP value for a linear model under an
+independent-feature baseline (verified numerically against this file's
+output: max abs difference 0.0, not an approximation).
+
+SHAP values are computed in log-odds (logit) space, not probability
+space — this is standard practice for linear models, since
 sigmoid-transforming would break the additivity property SHAP depends on
 (values summing to output - base_value). Sign and relative magnitude in
 logit space still map directly onto "helped/hurt the score" and "by how
@@ -40,7 +48,7 @@ def load_features(path):
 
 
 def build_explainer(model, background):
-    return shap.LinearExplainer(model, background)
+    return shap.LinearExplainer(model, shap.maskers.Independent(background, max_samples=len(background)))
 
 
 def top_factors(explainer, feature_vector, top_n=2):

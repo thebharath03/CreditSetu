@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>CreditSetu — POST /documents test harness</title>
+</head>
+<body>
+<h1>POST /documents test harness</h1>
+<p>Bare manual test page, not a polished UI. Uploads a document image through the full OCR &rarr; score &rarr; explain &rarr; write-to-Supabase pipeline.</p>
+
+<form id="form">
+  <p><label>Document image: <input type="file" name="document" required /></label></p>
+  <p><label>Applicant ID (optional, defaults to a generated one): <input type="text" name="applicantId" /></label></p>
+  <p><label>Applicant name: <input type="text" name="name" value="Test applicant" /></label></p>
+  <p><label>Document type: <input type="text" name="documentType" value="electricity_bill" /></label></p>
+  <p><label>Rent regularity (0-1, OCR can't derive this from one document): <input type="number" name="rentRegularity" min="0" max="1" step="0.01" value="0.5" /></label></p>
+  <p><label>Utility regularity (0-1): <input type="number" name="utilityRegularity" min="0" max="1" step="0.01" value="0.5" /></label></p>
+  <p><label>Months of history: <input type="number" name="monthsHistory" min="0" value="6" /></label></p>
+  <p><button type="submit">Upload &amp; score</button></p>
+</form>
+
+<pre id="result"></pre>
+
+<script>
+  document.getElementById('form').addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const result = document.getElementById('result')
+    result.textContent = 'Uploading and running OCR — this can take a few seconds...'
+    try {
+      const response = await fetch('http://localhost:4000/documents', {
+        method: 'POST',
+        body: new FormData(e.target),
+      })
+      const body = await response.json()
+      result.textContent = `HTTP ${response.status}\n\n${JSON.stringify(body, null, 2)}`
+    } catch (err) {
+      result.textContent = `Request failed: ${err.message}`
+    }
+  })
+</script>
+</body>
+</html>

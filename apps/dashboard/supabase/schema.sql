@@ -102,6 +102,13 @@ create policy "verify credentials" on credentials for update to anon, authentica
 grant insert on credentials to anon, authenticated;
 grant update (verified) on credentials to anon, authenticated;
 
+-- service_role (used server-side by apps/api's supabaseAdmin.js) bypasses
+-- RLS, but still needs base table grants like any role — that's a
+-- separate mechanism, and dropping/recreating the tables above didn't
+-- carry over Supabase's default grant for this role either.
+grant all on applicants, documents, scores, explanation_factors, credentials, audit_trail
+  to service_role;
+
 alter publication supabase_realtime add table applicants;
 alter publication supabase_realtime add table scores;
 
