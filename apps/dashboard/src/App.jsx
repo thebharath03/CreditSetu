@@ -4,6 +4,7 @@ import Header from './components/layout/Header'
 import ApplicantQueue from './components/queue/ApplicantQueue'
 import ApplicantDetail from './components/detail/ApplicantDetail'
 import CredentialsView from './components/credentials/CredentialsView'
+import ApplicantView from './components/applicant/ApplicantView'
 import LoginScreen from './components/auth/LoginScreen'
 import { useMock } from './lib/dataSource'
 import { getSupabase } from './lib/supabaseClient'
@@ -32,11 +33,13 @@ function App() {
   if (session === undefined) return null
   if (!session) return <LoginScreen />
 
+  let kicker = 'Lender Portal'
   let title = 'Applicant Queue'
   let subtitle = 'Scored applicants, most recent first'
   let content = <ApplicantQueue onSelectApplicant={setSelectedApplicantId} />
 
   if (selectedApplicantId) {
+    kicker = 'Applicant Record'
     title = 'Applicant Detail'
     subtitle = 'Score, explanation, and document history'
     content = (
@@ -47,16 +50,22 @@ function App() {
       />
     )
   } else if (view === 'credentials') {
+    kicker = 'Lender Portal'
     title = 'Credentials'
     subtitle = 'Issue and verify portable score credentials'
     content = <CredentialsView />
+  } else if (view === 'applicant-view') {
+    kicker = 'Applicant Preview'
+    title = 'Your Score'
+    subtitle = 'A mock of what an applicant sees of their own record'
+    content = <ApplicantView />
   }
 
   return (
     <div className="dashboard-shell">
       <Sidebar activeView={view} onSelectView={selectView} />
       <div className="dashboard-main">
-        <Header title={title} subtitle={subtitle} />
+        <Header kicker={kicker} title={title} subtitle={subtitle} />
         <main className="dashboard-content">{content}</main>
       </div>
     </div>

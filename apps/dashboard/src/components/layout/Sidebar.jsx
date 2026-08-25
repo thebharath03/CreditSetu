@@ -4,6 +4,7 @@ import { getSupabase } from '../../lib/supabaseClient'
 const NAV_VIEWS = [
   { key: 'queue', label: 'Queue' },
   { key: 'credentials', label: 'Credentials' },
+  { key: 'applicant-view', label: 'Applicant View' },
 ]
 
 const DISABLED_ITEMS = ['Score Detail', 'What-If Simulator']
