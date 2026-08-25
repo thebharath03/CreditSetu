@@ -1,5 +1,5 @@
 {
-  "installCommand": "npm install",
-  "buildCommand": "npm run build -w dashboard && DIST=$(find . -maxdepth 3 -type d -name dist 2>/dev/null | grep -v node_modules | head -1) && rm -rf ./deploy_dist && cp -r \"$DIST\" ./deploy_dist",
-  "outputDirectory": "deploy_dist"
+  "installCommand": "npm install --include=dev",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
 }
