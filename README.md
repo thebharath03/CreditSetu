@@ -1,16 +1,29 @@
-# React + Vite
+# CreditSetu
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Alternative-data credit scoring for applicants without a formal credit history — utility bills, rent receipts, and similar documents are turned into a transparent, explainable score. This repo is the pre-hackathon build: everything except the mobile app.
 
-Currently, two official plugins are available:
+## What's here
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **`apps/dashboard`** — the lender dashboard (React + Vite). Applicant queue, score detail with explainability, a what-if simulator, and a credentials tab for issuing/verifying portable QR score credentials. Reads through a single `dataSource.js` interface that switches between hardcoded mock fixtures and a live Supabase backend via `VITE_USE_MOCK`.
+- **`model`** — the scoring model (Python). Synthetic dataset generation, a logistic regression trained on it, and `weights.json` exported for the dashboard's client-side scoring (used directly by the what-if simulator).
 
-## React Compiler
+## Running the dashboard
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```
+cd apps/dashboard
+npm install
+npm run dev
+```
 
-## Expanding the Oxlint configuration
+Set `apps/dashboard/.env` (see `VITE_USE_MOCK`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) — with `VITE_USE_MOCK=true` it runs entirely on mock data, no Supabase project needed.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+To run live against Supabase, apply `apps/dashboard/supabase/schema.sql` then `seed.sql` in the Supabase SQL editor, and set `VITE_USE_MOCK=false`.
+
+## Regenerating the model
+
+```
+python model/generate_dataset.py
+python model/train_model.py
+```
+
+See `model/README.md` for the labeling rule and what the dataset actually represents.
